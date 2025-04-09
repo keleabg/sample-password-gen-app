@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for range slider thumb */
+.range-slider::-webkit-slider-thumb {
+  @apply w-5 h-5 bg-gradient-to-r from-orange-500 to-red-500 rounded-full appearance-none cursor-pointer transition-transform duration-150 ease-in-out active:scale-110;
+}
+
+.range-slider::-moz-range-thumb {
+   @apply w-5 h-5 bg-gradient-to-r from-orange-500 to-red-500 rounded-full border-none cursor-pointer transition-transform duration-150 ease-in-out active:scale-110;
+}
+
+/* Optional: Style the track */
+.range-slider::-webkit-slider-runnable-track {
+  @apply w-full h-2 bg-gray-200 rounded-lg cursor-pointer;
+}
+
+.range-slider::-moz-range-track {
+   @apply w-full h-2 bg-gray-200 rounded-lg cursor-pointer;
+}
