@@ -303,6 +303,12 @@ const App: React.FC = () => {
         {/* Auth Section */}
         {!session ? (
           <div className="mb-8">
+            {/* Gebeya Logo Added Here - Updated URL */}
+            <img
+              src="https://gebeya.com/wp-content/uploads/2025/02/Gebeya_24_Logo_Primary_FullColorReversed-1.svg"
+              alt="Gebeya Logo"
+              className="h-10 w-auto mx-auto mb-6" // Adjusted margin
+            />
             <h2 className="text-xl font-semibold text-center text-gray-700 mb-4">{authMode === 'login' ? 'Login' : 'Sign Up'}</h2>
             <form onSubmit={handleAuth}>
               <input
