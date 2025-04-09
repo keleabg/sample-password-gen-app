@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Copy, RefreshCw, Save, Trash2, LogOut, Eye, EyeOff } from 'lucide-react';
 import { supabase } from './lib/supabaseClient';
 import type { Session, User } from '@supabase/supabase-js';
+import Navbar from './components/Navbar';
 
 // Define a type for saved passwords (matching the table structure)
 interface SavedPassword {
@@ -297,234 +298,239 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-300 via-orange-400 to-red-500 p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-6 md:p-8">
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <div className="container mx-auto px-4 py-8">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-300 via-orange-400 to-red-500 p-4">
+          <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-6 md:p-8">
 
-        {/* Auth Section */}
-        {!session ? (
-          <div className="mb-8">
-            {/* Gebeya Logo Added Here - Updated URL */}
-            <img
-              src="https://gebeya.com/wp-content/uploads/2025/02/Gebeya_24_Logo_Primary_FullColorReversed-1.svg"
-              alt="Gebeya Logo"
-              className="h-10 w-auto mx-auto mb-6" // Adjusted margin
-            />
-            <h2 className="text-xl font-semibold text-center text-gray-700 mb-4">{authMode === 'login' ? 'Login' : 'Sign Up'}</h2>
-            <form onSubmit={handleAuth}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={authPassword}
-                onChange={(e) => setAuthPassword(e.target.value)}
-                required
-                className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              {authError && <p className="text-red-500 text-sm mb-3">{authError}</p>}
-              <button
-                type="submit"
-                disabled={authLoading}
-                className={`w-full p-3 text-lg font-semibold text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${authLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700'}`}
-              >
-                {authLoading ? 'Processing...' : (authMode === 'login' ? 'Login' : 'Sign Up')}
-              </button>
-            </form>
-            <button
-              onClick={() => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); setAuthError(null); }}
-              className="mt-4 text-center w-full text-sm text-orange-600 hover:underline"
-            >
-              {authMode === 'login' ? 'Need an account? Sign Up' : 'Already have an account? Login'}
-            </button>
-          </div>
-        ) : (
-          // Generator and Saved Passwords Section (Logged In)
-          <>
-            <div className="flex justify-between items-center mb-6">
-              <p className="text-sm text-gray-600">Logged in as: <span className="font-medium">{user?.email}</span></p>
-              <button
-                onClick={handleLogout}
-                disabled={authLoading}
-                className="flex items-center px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors duration-200"
-              >
-                <LogOut size={16} className="mr-1" /> Logout
-              </button>
-            </div>
-
-            <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">Password Generator</h1>
-
-            {/* Password Display & Copy */}
-            <div className="relative mb-1">
-              <input
-                type="text"
-                value={password}
-                readOnly
-                className="w-full p-3 pr-24 text-lg bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-700 font-mono"
-                placeholder="Your password"
-              />
-              <div className="absolute inset-y-0 right-0 flex items-center">
-                 <button
-                    onClick={copyToClipboard}
-                    className={`h-full px-3 flex items-center transition-colors duration-200 ${
-                    copied
-                        ? 'bg-green-500 hover:bg-green-600 text-white'
-                        : 'bg-orange-500 hover:bg-orange-600 text-white'
-                    }`}
-                    title={copied ? 'Copied!' : 'Copy to Clipboard'}
-                 >
-                    <Copy size={20} />
-                 </button>
-                 <button
-                    onClick={generatePassword}
-                    disabled={!canGenerate}
-                    className={`h-full px-3 flex items-center rounded-r-md transition-colors duration-200 ${!canGenerate ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
-                    title="Generate New Password"
-                 >
-                    <RefreshCw size={20} />
-                 </button>
-              </div>
-            </div>
-            {copied && <p className="text-green-600 text-sm text-center mb-3 -mt-1">Copied to clipboard!</p>}
-
-            {/* Save Password Section */}
-            <div className="mt-4 mb-4 flex items-center space-x-2">
-                <input
-                    type="text"
-                    placeholder="Optional Label (e.g., 'Gmail')"
-                    value={saveLabel}
-                    onChange={(e) => setSaveLabel(e.target.value)}
-                    className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500 text-sm"
+            {/* Auth Section */}
+            {!session ? (
+              <div className="mb-8">
+                {/* Gebeya Logo Added Here - Updated URL */}
+                <img
+                  src="https://gebeya.com/wp-content/uploads/2025/02/Gebeya_24_Logo_Primary_FullColorReversed-1.svg"
+                  alt="Gebeya Logo"
+                  className="h-10 w-auto mx-auto mb-6" // Adjusted margin
                 />
+                <h2 className="text-xl font-semibold text-center text-gray-700 mb-4">{authMode === 'login' ? 'Login' : 'Sign Up'}</h2>
+                <form onSubmit={handleAuth}>
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full p-3 mb-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    required
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {authError && <p className="text-red-500 text-sm mb-3">{authError}</p>}
+                  <button
+                    type="submit"
+                    disabled={authLoading}
+                    className={`w-full p-3 text-lg font-semibold text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${authLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700'}`}
+                  >
+                    {authLoading ? 'Processing...' : (authMode === 'login' ? 'Login' : 'Sign Up')}
+                  </button>
+                </form>
                 <button
-                    onClick={handleSavePassword}
-                    disabled={authLoading || !password || password === 'Select at least one character type'}
-                    className={`flex items-center px-4 py-2 text-sm font-semibold text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 ${
-                        (authLoading || !password || password === 'Select at least one character type')
-                        ? 'bg-gray-400 cursor-not-allowed'
-                        : 'bg-green-500 hover:bg-green-600'
-                    }`}
-                    title="Save generated password"
+                  onClick={() => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); setAuthError(null); }}
+                  className="mt-4 text-center w-full text-sm text-orange-600 hover:underline"
                 >
-                    <Save size={16} className="mr-1" /> Save
+                  {authMode === 'login' ? 'Need an account? Sign Up' : 'Already have an account? Login'}
                 </button>
-            </div>
-             {saveError && <p className="text-red-500 text-sm text-center mb-3 -mt-2">{saveError}</p>}
+              </div>
+            ) : (
+              // Generator and Saved Passwords Section (Logged In)
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <p className="text-sm text-gray-600">Logged in as: <span className="font-medium">{user?.email}</span></p>
+                  <button
+                    onClick={handleLogout}
+                    disabled={authLoading}
+                    className="flex items-center px-3 py-1 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors duration-200"
+                  >
+                    <LogOut size={16} className="mr-1" /> Logout
+                  </button>
+                </div>
+
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">Password Generator</h1>
+
+                {/* Password Display & Copy */}
+                <div className="relative mb-1">
+                  <input
+                    type="text"
+                    value={password}
+                    readOnly
+                    className="w-full p-3 pr-24 text-lg bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-700 font-mono"
+                    placeholder="Your password"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center">
+                     <button
+                        onClick={copyToClipboard}
+                        className={`h-full px-3 flex items-center transition-colors duration-200 ${
+                        copied
+                            ? 'bg-green-500 hover:bg-green-600 text-white'
+                            : 'bg-orange-500 hover:bg-orange-600 text-white'
+                        }`}
+                        title={copied ? 'Copied!' : 'Copy to Clipboard'}
+                     >
+                        <Copy size={20} />
+                     </button>
+                     <button
+                        onClick={generatePassword}
+                        disabled={!canGenerate}
+                        className={`h-full px-3 flex items-center rounded-r-md transition-colors duration-200 ${!canGenerate ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+                        title="Generate New Password"
+                     >
+                        <RefreshCw size={20} />
+                     </button>
+                  </div>
+                </div>
+                {copied && <p className="text-green-600 text-sm text-center mb-3 -mt-1">Copied to clipboard!</p>}
+
+                {/* Save Password Section */}
+                <div className="mt-4 mb-4 flex items-center space-x-2">
+                    <input
+                        type="text"
+                        placeholder="Optional Label (e.g., 'Gmail')"
+                        value={saveLabel}
+                        onChange={(e) => setSaveLabel(e.target.value)}
+                        className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-500 text-sm"
+                    />
+                    <button
+                        onClick={handleSavePassword}
+                        disabled={authLoading || !password || password === 'Select at least one character type'}
+                        className={`flex items-center px-4 py-2 text-sm font-semibold text-white rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 ${
+                            (authLoading || !password || password === 'Select at least one character type')
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-green-500 hover:bg-green-600'
+                        }`}
+                        title="Save generated password"
+                    >
+                        <Save size={16} className="mr-1" /> Save
+                    </button>
+                </div>
+                 {saveError && <p className="text-red-500 text-sm text-center mb-3 -mt-2">{saveError}</p>}
 
 
-            {/* Strength Indicator */}
-            <div className="mb-6">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium text-gray-600">Strength:</span>
-                <span className={`text-sm font-semibold ${
-                  strength === 'Weak' ? 'text-red-600' :
-                  strength === 'Medium' ? 'text-yellow-600' :
-                  strength === 'Strong' ? 'text-orange-600' : 'text-green-600'
-                }`}>{strength}</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div className={`h-2.5 rounded-full transition-all duration-300 ${strengthColor}`} style={{ width: `${
-                    strength === 'Weak' ? '25%' :
-                    strength === 'Medium' ? '50%' :
-                    strength === 'Strong' ? '75%' : '100%'
-                  }` }}></div>
-              </div>
-            </div>
+                {/* Strength Indicator */}
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-sm font-medium text-gray-600">Strength:</span>
+                    <span className={`text-sm font-semibold ${
+                      strength === 'Weak' ? 'text-red-600' :
+                      strength === 'Medium' ? 'text-yellow-600' :
+                      strength === 'Strong' ? 'text-orange-600' : 'text-green-600'
+                    }`}>{strength}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className={`h-2.5 rounded-full transition-all duration-300 ${strengthColor}`} style={{ width: `${
+                        strength === 'Weak' ? '25%' :
+                        strength === 'Medium' ? '50%' :
+                        strength === 'Strong' ? '75%' : '100%'
+                      }` }}></div>
+                  </div>
+                </div>
 
-            {/* Length Slider */}
-            <div className="mb-6">
-              <label htmlFor="length" className="block text-sm font-medium text-gray-700 mb-2">
-                Password Length: <span className="font-bold text-orange-600">{length}</span>
-              </label>
-              <input
-                type="range"
-                id="length"
-                min="8"
-                max="128"
-                value={length}
-                onChange={(e) => setLength(parseInt(e.target.value, 10))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-slider"
-              />
-            </div>
+                {/* Length Slider */}
+                <div className="mb-6">
+                  <label htmlFor="length" className="block text-sm font-medium text-gray-700 mb-2">
+                    Password Length: <span className="font-bold text-orange-600">{length}</span>
+                  </label>
+                  <input
+                    type="range"
+                    id="length"
+                    min="8"
+                    max="128"
+                    value={length}
+                    onChange={(e) => setLength(parseInt(e.target.value, 10))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer range-slider"
+                  />
+                </div>
 
-            {/* Character Type Checkboxes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              {/* Checkbox items */}
-              <div className="flex items-center">
-                <input type="checkbox" id="uppercase" checked={includeUppercase} onChange={(e) => setIncludeUppercase(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
-                <label htmlFor="uppercase" className="ml-2 block text-sm text-gray-900 cursor-pointer">Uppercase (A-Z)</label>
-              </div>
-              <div className="flex items-center">
-                <input type="checkbox" id="lowercase" checked={includeLowercase} onChange={(e) => setIncludeLowercase(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
-                <label htmlFor="lowercase" className="ml-2 block text-sm text-gray-900 cursor-pointer">Lowercase (a-z)</label>
-              </div>
-              <div className="flex items-center">
-                <input type="checkbox" id="numbers" checked={includeNumbers} onChange={(e) => setIncludeNumbers(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
-                <label htmlFor="numbers" className="ml-2 block text-sm text-gray-900 cursor-pointer">Numbers (0-9)</label>
-              </div>
-              <div className="flex items-center">
-                <input type="checkbox" id="symbols" checked={includeSymbols} onChange={(e) => setIncludeSymbols(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
-                <label htmlFor="symbols" className="ml-2 block text-sm text-gray-900 cursor-pointer">Symbols (!@#...)</label>
-              </div>
-            </div>
-             {!canGenerate && <p className="text-red-500 text-sm text-center mb-4 -mt-2">Please select at least one character type.</p>}
+                {/* Character Type Checkboxes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                  {/* Checkbox items */}
+                  <div className="flex items-center">
+                    <input type="checkbox" id="uppercase" checked={includeUppercase} onChange={(e) => setIncludeUppercase(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
+                    <label htmlFor="uppercase" className="ml-2 block text-sm text-gray-900 cursor-pointer">Uppercase (A-Z)</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="lowercase" checked={includeLowercase} onChange={(e) => setIncludeLowercase(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
+                    <label htmlFor="lowercase" className="ml-2 block text-sm text-gray-900 cursor-pointer">Lowercase (a-z)</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="numbers" checked={includeNumbers} onChange={(e) => setIncludeNumbers(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
+                    <label htmlFor="numbers" className="ml-2 block text-sm text-gray-900 cursor-pointer">Numbers (0-9)</label>
+                  </div>
+                  <div className="flex items-center">
+                    <input type="checkbox" id="symbols" checked={includeSymbols} onChange={(e) => setIncludeSymbols(e.target.checked)} className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"/>
+                    <label htmlFor="symbols" className="ml-2 block text-sm text-gray-900 cursor-pointer">Symbols (!@#...)</label>
+                  </div>
+                </div>
+                 {!canGenerate && <p className="text-red-500 text-sm text-center mb-4 -mt-2">Please select at least one character type.</p>}
 
 
-            {/* Saved Passwords List */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-700 mb-4">Saved Passwords</h2>
-                {loadingPasswords ? (
-                    <p className="text-gray-500 text-center">Loading saved passwords...</p>
-                ) : savedPasswords.length === 0 ? (
-                    <p className="text-gray-500 text-center">No passwords saved yet.</p>
-                ) : (
-                    <ul className="space-y-3 max-h-60 overflow-y-auto pr-2">
-                        {savedPasswords.map((p) => (
-                            <li key={p.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
-                                <div className="flex-1 overflow-hidden mr-2">
-                                    <span className="text-sm font-medium text-gray-800 block truncate" title={p.label || 'No Label'}>
-                                        {p.label || <i className="text-gray-400">No Label</i>}
-                                    </span>
-                                    <span className="text-xs text-gray-500 font-mono block truncate" title={showSavedPassword[p.id] ? p.password_text : '••••••••'}>
-                                        {showSavedPassword[p.id] ? p.password_text : '••••••••'}
-                                    </span>
-                                </div>
-                                <div className="flex items-center space-x-2 flex-shrink-0">
-                                     <button
-                                        onClick={() => toggleShowPassword(p.id)}
-                                        className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                                        title={showSavedPassword[p.id] ? "Hide Password" : "Show Password"}
-                                    >
-                                        {showSavedPassword[p.id] ? <EyeOff size={16} /> : <Eye size={16} />}
-                                    </button>
-                                    <button
-                                        onClick={() => navigator.clipboard.writeText(p.password_text)}
-                                        className="p-1 text-gray-500 hover:text-green-600 transition-colors"
-                                        title="Copy Password"
-                                    >
-                                        <Copy size={16} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeletePassword(p.id)}
-                                        className="p-1 text-gray-500 hover:text-red-600 transition-colors"
-                                        title="Delete Password"
-                                        disabled={authLoading}
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-          </>
-        )}
+                {/* Saved Passwords List */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                    <h2 className="text-lg font-semibold text-gray-700 mb-4">Saved Passwords</h2>
+                    {loadingPasswords ? (
+                        <p className="text-gray-500 text-center">Loading saved passwords...</p>
+                    ) : savedPasswords.length === 0 ? (
+                        <p className="text-gray-500 text-center">No passwords saved yet.</p>
+                    ) : (
+                        <ul className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                            {savedPasswords.map((p) => (
+                                <li key={p.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-md shadow-sm">
+                                    <div className="flex-1 overflow-hidden mr-2">
+                                        <span className="text-sm font-medium text-gray-800 block truncate" title={p.label || 'No Label'}>
+                                            {p.label || <i className="text-gray-400">No Label</i>}
+                                        </span>
+                                        <span className="text-xs text-gray-500 font-mono block truncate" title={showSavedPassword[p.id] ? p.password_text : '••••••••'}>
+                                            {showSavedPassword[p.id] ? p.password_text : '••••••••'}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center space-x-2 flex-shrink-0">
+                                         <button
+                                            onClick={() => toggleShowPassword(p.id)}
+                                            className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
+                                            title={showSavedPassword[p.id] ? "Hide Password" : "Show Password"}
+                                        >
+                                            {showSavedPassword[p.id] ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        </button>
+                                        <button
+                                            onClick={() => navigator.clipboard.writeText(p.password_text)}
+                                            className="p-1 text-gray-500 hover:text-green-600 transition-colors"
+                                            title="Copy Password"
+                                        >
+                                            <Copy size={16} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeletePassword(p.id)}
+                                            className="p-1 text-gray-500 hover:text-red-600 transition-colors"
+                                            title="Delete Password"
+                                            disabled={authLoading}
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
